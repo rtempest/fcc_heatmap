@@ -9,7 +9,7 @@ d3.json(url, (error, json) => {
 
     // map the json year data
     const yearData = json['monthlyVariance'].map(x => x.year)
-
+    console.log(json.monthlyVariance)
     // define dimensions and position
     const h = 400
     const w = 1200
@@ -50,20 +50,24 @@ d3.json(url, (error, json) => {
 
     // create the y scale
     const yScale = d3.scaleLinear()
-        .domain([0, 12])
+        .domain([11, 0])
         .range([h - pbtm, ptop])
-    console.log(yScale(1))
+
+    console.log(yScale(8))
 
 
     // create the heat map boxes
     svg.selectAll('rect')
-        .attr('id', 'box')
         .data(json.monthlyVariance)
         .enter()
         .append('rect')
+        .attr('class', 'cell')
+        .attr('data-year', (d) => d.year)
+        .attr('data-month', (d) => d.month - 1)
+        .attr('data-temp', (d) => d.variance + baseTemp)
         .attr('x', (d) => xScale(d.year))
-        .attr('y', (d) => yScale(d.month))
-        .attr('height', (h - ptop - pbtm) / 12)
+        .attr('y', (d) => yScale(d.month - 2))
+        .attr('height', (h - ptop - pbtm) / 11)
         .attr('width', (w - plr * 2) / (yearData.length / 12))
 
     // add the x axis
@@ -75,7 +79,8 @@ d3.json(url, (error, json) => {
         .call(xAxis)
 
     // add the y axis
-    const yAxis = d3.axisLeft().scale(yScale)
+    const yAxis = d3.axisLeft()
+        .scale(yScale)
 
     svg.append('g')
         .attr('id', 'y-axis')
