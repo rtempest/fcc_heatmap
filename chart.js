@@ -2,8 +2,8 @@
 url = 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/global-temperature.json'
 
 d3.json(url, (error, json) => {
+    // save the base temperature
     const baseTemp = json.baseTemperature
-    console.log(baseTemp)
 
     // define dimensions and position
     const h = 600
@@ -49,5 +49,22 @@ d3.json(url, (error, json) => {
         .range([h, 0])
 
     // create the heat map boxes
+
+
+    // add the x axis
+    const xAxis = d3.axisBottom().scale(xScale).tickFormat(d3.format('.4r'))
+
+    svg.append('g')
+        .attr('id', 'x-axis')
+        .attr('transform', `translate(0,${h - pX})`)
+        .call(xAxis)
+
+    // add the y axis
+    const yAxis = d3.axisLeft().scale(yScale)
+
+    svg.append('g')
+        .attr('id', 'y-axis')
+        .attr('transform', `translate(0, ${pY})`)
+        .call(yAxis)
 })
 
