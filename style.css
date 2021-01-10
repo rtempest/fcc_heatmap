@@ -1,0 +1,13 @@
+#chart {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#chart {
+    width:auto;
+}
+
+svg {
+    padding-top: 50px;
+}
