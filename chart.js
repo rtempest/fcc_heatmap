@@ -5,7 +5,7 @@ d3.json(url, (error, json) => {
     // save the base temperature
     const baseTemp = json.baseTemperature
     console.log(json)
-    const months = ['January', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'August', 'Sept', 'Oct', 'Nov']
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].reverse()
 
     // define dimensions and position
     const h = 400
@@ -69,9 +69,11 @@ d3.json(url, (error, json) => {
         .range([plr, w - plr])
 
     // create the y scale
-    const yScale = d3.scaleLinear()
-        .domain([11, 0])
-        .range([h - pbtm, ptop])
+    monthNums = [11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
+    const yScale = d3.scaleBand()
+        .domain(monthNums)
+        .rangeRound([h - pbtm, ptop])
+        .padding(0.1);
 
     console.log(yScale(8))
 
@@ -90,7 +92,7 @@ d3.json(url, (error, json) => {
         .attr('data-month', (d) => d.month - 1)
         .attr('data-temp', (d) => d.variance + baseTemp)
         .attr('x', (d) => xScale(d.year))
-        .attr('y', (d) => yScale(d.month - 2))
+        .attr('y', (d) => yScale(d.month - 1))
         .attr('height', (h - ptop - pbtm) / 11)
         .attr('width', (w - plr * 2) / (yearData.length / 12))
         .attr('fill', (d) => getColour(d.variance))
@@ -111,6 +113,8 @@ d3.json(url, (error, json) => {
     // add the y axis
     const yAxis = d3.axisLeft()
         .scale(yScale)
+        .tickFormat((d, i) => months[i])
+        .tickSize(0);
 
     svg.append('g')
         .attr('id', 'y-axis')
