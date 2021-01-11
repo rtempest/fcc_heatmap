@@ -4,7 +4,6 @@ url = 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/maste
 d3.json(url, (error, json) => {
     // save the base temperature
     const baseTemp = json.baseTemperature
-    console.log(json)
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].reverse()
 
     // define dimensions and position
@@ -12,7 +11,7 @@ d3.json(url, (error, json) => {
     const w = 1200
     const pbtm = 50
     const ptop = 100
-    const plr = 50
+    const plr = 60
 
     // create svg
     const svg = d3.select('#chart')
@@ -45,7 +44,7 @@ d3.json(url, (error, json) => {
     const varianceData = json['monthlyVariance'].map(x => x.variance)
     const minVar = d3.min(varianceData)
     const maxVar = d3.max(varianceData)
-    console.log(varianceData)
+
     // create function to colour the rectangles based on variance
     const getColour = function (variance) {
         const binSize = (maxVar - minVar) / 6
@@ -75,8 +74,6 @@ d3.json(url, (error, json) => {
         .rangeRound([h - pbtm, ptop])
         .padding(0.1);
 
-    console.log(yScale(8))
-
     // create the tooltip
     const tooltip = d3.select('#chart')
         .append('div')
@@ -100,7 +97,8 @@ d3.json(url, (error, json) => {
             tooltip
                 .style('opacity', 1)
                 .html(`<p>Year: ${d.year}</p><p>Temperature: ${d.variance + baseTemp}`)
-        });
+        })
+        .on('mouseout', () => tooltip.style('opacity', 0));
 
     // add the x axis
     const xAxis = d3.axisBottom().scale(xScale).tickFormat(d3.format('.4r'))
