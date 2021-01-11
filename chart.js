@@ -4,11 +4,11 @@ url = 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/maste
 d3.json(url, (error, json) => {
     // save the base temperature
     const baseTemp = json.baseTemperature
-    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'].reverse()
-
+    const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+    console.log(months)
     // define dimensions and position
     const h = 400
-    const w = 1200
+    const w = 1300
     const pbtm = 50
     const ptop = 100
     const plr = 60
@@ -96,7 +96,11 @@ d3.json(url, (error, json) => {
         .on('mouseover', (d) => {
             tooltip
                 .style('opacity', 1)
-                .html(`<p>Year: ${d.year}</p><p>Temperature: ${d.variance + baseTemp}`)
+                .style('left', d3.event.pageX + 28 + "px")
+                .style('top', `${d3.event.pageY}px`)
+                .attr('data-year', d.year)
+                .html(`<h2>${months[d.month - 1]} ${d.year}</h2><p>Temperature: ${d.variance + baseTemp}`)
+            console.log(d)
         })
         .on('mouseout', () => tooltip.style('opacity', 0));
 
@@ -109,9 +113,11 @@ d3.json(url, (error, json) => {
         .call(xAxis)
 
     // add the y axis
+    const monthsReversed = [...months].reverse()
+
     const yAxis = d3.axisLeft()
         .scale(yScale)
-        .tickFormat((d, i) => months[i])
+        .tickFormat((d, i) => monthsReversed[i])
         .tickSize(0);
 
     svg.append('g')
