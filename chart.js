@@ -46,22 +46,30 @@ d3.json(url, (error, json) => {
     const minVar = d3.min(varianceData)
     const maxVar = d3.max(varianceData)
 
+    // threshold scale for the temperature
+    const binSize = (maxVar - minVar) / 6
+    var threshold = d3.scaleThreshold()
+        .domain([minVar, -2, -1, 0, 1, maxVar])
+        .range(["#D85A86", "#E48BAA", "#ECACC3", "#C5D7E8", "#8AAFD0", '#467EAF'])
+
+    console.log(maxVar, minVar)
+
     // create function to colour the rectangles based on variance
-    const getColour = function (variance) {
-        const binSize = (maxVar - minVar) / 6
-        if (variance > (minVar + binSize * 5))
-            return '#D85A86';
-        else if (variance > (minVar + binSize * 4.5))
-            return '#E48BAA';
-        else if (variance > (minVar + binSize * 4))
-            return '#ECACC3';
-        else if (variance > (minVar + binSize * 3.5))
-            return '#C5D7E8';
-        else if (variance > (minVar + binSize * 3))
-            return '#8AAFD0';
-        else if (variance >= (minVar))
-            return '#467EAF';
-    }
+    // const getColour = function (variance) {
+    //     const binSize = (maxVar - minVar) / 6
+    //     if (variance > (minVar + binSize * 5))
+    //         return '#D85A86';
+    //     else if (variance > (minVar + binSize * 4.5))
+    //         return '#E48BAA';
+    //     else if (variance > (minVar + binSize * 4))
+    //         return '#ECACC3';
+    //     else if (variance > (minVar + binSize * 3.5))
+    //         return '#C5D7E8';
+    //     else if (variance > (minVar + binSize * 3))
+    //         return '#8AAFD0';
+    //     else if (variance >= (minVar))
+    //         return '#467EAF';
+    // }
 
     // create the x scale
     const xScale = d3.scaleLinear()
@@ -93,7 +101,7 @@ d3.json(url, (error, json) => {
         .attr('y', (d) => yScale(d.month - 1))
         .attr('height', (h - ptop - pbtm) / 11)
         .attr('width', (w - plr * 2) / (yearData.length / 12))
-        .attr('fill', (d) => getColour(d.variance))
+        .attr('fill', (d) => threshold(d.variance))
         .on('mouseover', (d) => {
             tooltip
                 .style('opacity', 1)
@@ -101,7 +109,6 @@ d3.json(url, (error, json) => {
                 .style('top', `${d3.event.pageY}px`)
                 .attr('data-year', d.year)
                 .html(`<h2>${months[d.month - 1]} ${d.year}</h2><p>Temperature: ${d.variance + baseTemp}`)
-            console.log(d)
         })
         .on('mouseout', () => tooltip.style('opacity', 0));
 
@@ -126,5 +133,13 @@ d3.json(url, (error, json) => {
         .attr('transform', `translate(${plr}, 0)`)
         .call(yAxis)
 
+    // create the legend axis
+    const legendAxis = d3.axisBottom()
+        .scale(threshold)
+
+    // svg.append('g')
+    //     .attr('id', 'legend-axis')
+    //     .attr('transform', `translate(400, 0)`)
+    //     .call(legendAxis)
 })
 
