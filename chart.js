@@ -22,17 +22,18 @@ d3.json(url, (error, json) => {
     // create title
     svg.append('text')
         .attr('id', 'title')
+        .style('font-size', '20px')
         .attr('x', w / 2)
-        .attr('y', ptop / 3)
-        .text('Average Land Surface Temperature')
+        .attr('y', ptop / 1.6)
+        .text('Land Surface Temperature')
         .attr('text-anchor', 'middle')
 
     // create description
     svg.append('text')
         .attr('id', 'description')
         .attr('x', w / 2)
-        .attr('y', ptop / 2)
-        .text('description bla bla bla')
+        .attr('y', ptop / 1.2)
+        .text('Global Monthly Average')
         .attr('text-anchor', 'middle')
 
     // get the year data
