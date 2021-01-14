@@ -9,7 +9,7 @@ d3.json(url, (error, json) => {
     // define dimensions and position
     const h = 400
     const w = 1300
-    const pbtm = 50
+    const pbtm = 80
     const ptop = 100
     const plr = 60
 
@@ -46,13 +46,15 @@ d3.json(url, (error, json) => {
     const minVar = d3.min(varianceData)
     const maxVar = d3.max(varianceData)
 
-    // threshold scale for the temperature
-    const binSize = (maxVar - minVar) / 6
-    var threshold = d3.scaleThreshold()
-        .domain([minVar, -2, -1, 0, 1, maxVar])
-        .range(["#D85A86", "#E48BAA", "#ECACC3", "#C5D7E8", "#8AAFD0", '#467EAF'])
+    // max and min temperature for the legend
+    const minTemp = baseTemp + minVar
+    const maxTemp = baseTemp + maxVar
+    console.log((maxTemp - minTemp) / 2)
 
-    console.log(maxVar, minVar)
+    // threshold scale for the temperature
+    var threshold = d3.scaleThreshold()
+        .domain([4, 6, 8, 10, 12, 14])
+        .range(["#D85A86", "#E48BAA", "#ECACC3", "#C5D7E8", "#8AAFD0", '#467EAF'].reverse())
 
     // create function to colour the rectangles based on variance
     // const getColour = function (variance) {
@@ -101,7 +103,7 @@ d3.json(url, (error, json) => {
         .attr('y', (d) => yScale(d.month - 1))
         .attr('height', (h - ptop - pbtm) / 11)
         .attr('width', (w - plr * 2) / (yearData.length / 12))
-        .attr('fill', (d) => threshold(d.variance))
+        .attr('fill', (d) => threshold(d.variance + baseTemp))
         .on('mouseover', (d) => {
             tooltip
                 .style('opacity', 1)
@@ -134,12 +136,38 @@ d3.json(url, (error, json) => {
         .call(yAxis)
 
     // create the legend axis
-    const legendAxis = d3.axisBottom()
-        .scale(threshold)
+    const lw = 400
+    const lh = 500
 
-    // svg.append('g')
-    //     .attr('id', 'legend-axis')
-    //     .attr('transform', `translate(400, 0)`)
-    //     .call(legendAxis)
+    const legendScale = d3.scaleLinear()
+        .domain([minTemp, maxTemp])
+        .range([0, lw])
+        .nice()
+
+    const legendAxis = d3.axisBottom()
+        .scale(legendScale)
+        .tickValues(threshold.domain())
+        .tickSize(5)
+
+    const legend = svg.append('g')
+        .attr('id', 'legend-axis')
+        .attr('transform', `translate(${plr}, ${h - pbtm / 4})`)
+        .call(legendAxis)
+
+    legend.selectAll('rect')
+        .data(threshold.range().map(c => {
+            const d = threshold.invertExtent(c);
+            if (d[0] == null) d[0] = legendScale.domain()[0]
+            if (d[1] == null) d[1] = legendScale.domain()[1]
+            return d
+        }))
+        .enter()
+        .append('rect')
+        .attr('class', 'legend-rect')
+        .attr('x', (d) => legendScale(d[0]))
+        .attr('y', -20)
+        .attr('height', 20)
+        .attr('width', (d) => legendScale(d[1]) - legendScale(d[0]))
+        .attr('fill', (d) => threshold(d[0]))
 })
 
