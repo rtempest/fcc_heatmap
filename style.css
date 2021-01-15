@@ -37,6 +37,6 @@ svg {
     margin: 0;
 }
 
-rect:hover {
+.cell:hover {
     fill: yellow;
 }

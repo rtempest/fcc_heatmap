@@ -53,25 +53,8 @@ d3.json(url, (error, json) => {
 
     // threshold scale for the temperature
     var threshold = d3.scaleThreshold()
-        .domain([4, 6, 8, 10, 12, 14])
-        .range(["#D85A86", "#E48BAA", "#ECACC3", "#C5D7E8", "#8AAFD0", '#467EAF'].reverse())
-
-    // create function to colour the rectangles based on variance
-    // const getColour = function (variance) {
-    //     const binSize = (maxVar - minVar) / 6
-    //     if (variance > (minVar + binSize * 5))
-    //         return '#D85A86';
-    //     else if (variance > (minVar + binSize * 4.5))
-    //         return '#E48BAA';
-    //     else if (variance > (minVar + binSize * 4))
-    //         return '#ECACC3';
-    //     else if (variance > (minVar + binSize * 3.5))
-    //         return '#C5D7E8';
-    //     else if (variance > (minVar + binSize * 3))
-    //         return '#8AAFD0';
-    //     else if (variance >= (minVar))
-    //         return '#467EAF';
-    // }
+        .domain([2, 4, 6, 8, 10, 12, 14])
+        .range(["#D85A86", "#E48BAA", "#ECACC3", "#C5D7E8", "#8AAFD0", '#467EAF', "#345E83"].reverse())
 
     // create the x scale
     const xScale = d3.scaleLinear()
@@ -115,7 +98,10 @@ d3.json(url, (error, json) => {
         .on('mouseout', () => tooltip.style('opacity', 0));
 
     // add the x axis
-    const xAxis = d3.axisBottom().scale(xScale).tickFormat(d3.format('.4r'))
+    const xAxis = d3.axisBottom()
+        .scale(xScale)
+        .tickFormat(d3.format('.4r'))
+        .ticks(20)
 
     svg.append('g')
         .attr('id', 'x-axis')
@@ -146,11 +132,13 @@ d3.json(url, (error, json) => {
 
     const legendAxis = d3.axisBottom()
         .scale(legendScale)
-        .tickValues(threshold.domain())
+        .tickValues([2].concat(threshold.domain()))
+        .ticks(10)
         .tickSize(5)
+        .tickFormat(d3.format('C'))
 
     const legend = svg.append('g')
-        .attr('id', 'legend-axis')
+        .attr('id', 'legend')
         .attr('transform', `translate(${plr}, ${h - pbtm / 4})`)
         .call(legendAxis)
 
