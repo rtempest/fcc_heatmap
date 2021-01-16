@@ -5,7 +5,7 @@ d3.json(url, (error, json) => {
     // save the base temperature
     const baseTemp = json.baseTemperature
     const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
-    console.log(months)
+
     // define dimensions and position
     const h = 400
     const w = 1300
@@ -49,7 +49,6 @@ d3.json(url, (error, json) => {
     // max and min temperature for the legend
     const minTemp = baseTemp + minVar
     const maxTemp = baseTemp + maxVar
-    console.log((maxTemp - minTemp) / 2)
 
     // threshold scale for the temperature
     var threshold = d3.scaleThreshold()
@@ -135,7 +134,6 @@ d3.json(url, (error, json) => {
         .tickValues([2].concat(threshold.domain()))
         .ticks(10)
         .tickSize(0)
-    // .style('z-index', 10)
 
     const legend = svg.append('g')
         .attr('id', 'legend')
