@@ -89,13 +89,13 @@ d3.json(url, (error, json) => {
         .attr('fill', (d) => threshold(d.variance + baseTemp))
         .on('mouseover', (d) => {
             tooltip
-                .style('opacity', 1)
+                .style('visibility', 'visible')
                 .style('left', d3.event.pageX + 28 + "px")
                 .style('top', `${d3.event.pageY}px`)
                 .attr('data-year', d.year)
-                .html(`<h2>${months[d.month - 1]} ${d.year}</h2><p>Temperature: ${d.variance + baseTemp}`)
+                .html(`<h2>${months[d.month - 1]} ${d.year}</h2><p>${(d.variance + baseTemp).toPrecision(3)}<span>&#x00B0<span>C`)
         })
-        .on('mouseout', () => tooltip.style('opacity', 0));
+        .on('mouseout', () => tooltip.style('visibility', 'hidden'));
 
     // add the x axis
     const xAxis = d3.axisBottom()

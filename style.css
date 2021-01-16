@@ -21,15 +21,19 @@ svg {
     top: 10px;
     height: auto;
     width: auto;
-    opacity: 0;
+    visibility: hidden;
+    opacity: 0.8;
     background-color: white;
-    padding: 5px;
+    padding: 1px 3px;
     text-align: center;
+    border-radius: 5px;
 }
 
 #tooltip h2 {
     padding: 1px 0px;
-    margin: 5px 0;
+    margin: 0px 0;
+    font-size: 14pt;
+    font-weight: 500;
 }
 
 #tooltip p {
