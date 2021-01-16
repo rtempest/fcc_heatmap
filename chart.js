@@ -134,12 +134,13 @@ d3.json(url, (error, json) => {
         .scale(legendScale)
         .tickValues([2].concat(threshold.domain()))
         .ticks(10)
-        .tickSize(5)
-        .tickFormat(d3.format('C'))
+        .tickSize(0)
+    // .style('z-index', 10)
 
     const legend = svg.append('g')
         .attr('id', 'legend')
         .attr('transform', `translate(${plr}, ${h - pbtm / 4})`)
+        .style('stroke-width', 0)
         .call(legendAxis)
 
     legend.selectAll('rect')
@@ -157,5 +158,13 @@ d3.json(url, (error, json) => {
         .attr('height', 20)
         .attr('width', (d) => legendScale(d[1]) - legendScale(d[0]))
         .attr('fill', (d) => threshold(d[0]))
+
+
+    // add degrees legend axis label
+    svg.append('text')
+        .attr('x', 465)
+        .attr('y', h - pbtm / 3 + 3)
+        .text('Temperature (°C)')
+        .style('font-size', 12)
 })
 
