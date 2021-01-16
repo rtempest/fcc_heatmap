@@ -89,7 +89,7 @@ d3.json(url, (error, json) => {
         .on('mouseover', (d) => {
             tooltip
                 .style('visibility', 'visible')
-                .style('left', d3.event.pageX + 28 + "px")
+                .style('left', d3.event.pageX + 20 + "px")
                 .style('top', `${d3.event.pageY}px`)
                 .attr('data-year', d.year)
                 .html(`<h2>${months[d.month - 1]} ${d.year}</h2><p>${(d.variance + baseTemp).toPrecision(3)}<span>&#x00B0<span>C`)
