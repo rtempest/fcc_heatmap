@@ -33,7 +33,7 @@ d3.json(url, (error, json) => {
         .attr('id', 'description')
         .attr('x', w / 2)
         .attr('y', ptop / 1.2)
-        .text('Global Monthly Average')
+        .text('Global Monthly Average from 1753 to 2015')
         .attr('text-anchor', 'middle')
 
     // get the year data
